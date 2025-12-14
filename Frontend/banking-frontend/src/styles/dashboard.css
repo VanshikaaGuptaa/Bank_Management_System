@@ -1,0 +1,110 @@
+.rm-container{
+    display:flex;
+    height:100vh;
+    font-family:Arial, sans-serif;
+}
+
+/* Left Menu */
+.sidebar{
+    width:250px;
+    background:#053B50;
+    color:white;
+    padding:25px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.sidebar a{
+    background:#176B87;
+    padding:10px;
+    border-radius:5px;
+    color:white;
+    text-decoration:none;
+    text-align:center;
+}
+
+.sidebar a:hover{
+    background:#64CCC5;
+    color:black;
+}
+
+/* Logout Btn */
+.logout-btn{
+    margin-top:auto;
+    background:red;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:5px;
+}
+
+/* Main Content */
+.content{
+    flex:1;
+    padding:50px;
+}
+
+.content h1{
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    font-size:18px;
+    opacity:.6;
+}
+/* Shared Page Layout */
+.page-container{
+    padding:40px;
+    font-family:Arial;
+}
+
+.title{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:25px;
+    color:#033b4a;
+}
+
+/* Data Table */
+.table{
+    width:90%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0px 3px 12px rgba(0,0,0,.1);
+}
+
+.table th{
+    background:#053B50;
+    color:white;
+    padding:12px;
+}
+
+.table td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+}
+
+/* Approve Button */
+.approve-btn{
+    background:#35a14f;
+    color:white;
+    border:none;
+    padding:8px 14px;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.approve-btn:hover{
+    background:#2b863f;
+}
+
+
+
+
+
+
+

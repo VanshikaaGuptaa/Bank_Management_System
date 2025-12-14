@@ -1,0 +1,162 @@
+.table-page{ padding:40px; font-family:sans-serif; }
+.table-page h1{ font-size:32px; margin-bottom:20px; }
+
+table{
+  width:80%; border-collapse:collapse; margin:auto;
+  box-shadow:0 3px 10px rgba(0,0,0,.2);
+}
+th{
+  background:#032B44; color:#fff; padding:14px; font-size:18px;
+}
+td{
+  padding:12px; border-bottom:1px solid #ddd;
+}
+
+.approve{ background:#28A745; color:#fff; padding:8px 14px; border:none; margin-right:6px }
+.reject{ background:#D62828; color:#fff; padding:8px 14px; border:none }
+.approve:hover{background:#1F7E34}
+.reject:hover{background:#A71D1D}
+
+/* .page-container {
+  width: 90%;
+  margin: auto;
+  padding-top: 40px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #003459;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 18px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+}
+
+.styled-table thead {
+  background: #002B5B;
+  color: #fff;
+}
+
+.styled-table th, .styled-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.styled-table tr:hover {
+  background: #f1f7ff;
+}
+
+.approve-btn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.approve-btn:hover {
+  background: #005ec4;
+} */
+ .page-container {
+  padding: 50px;
+  background: #f5f8ff;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: #083e66;
+  font-weight: bold;
+}
+
+.table {
+  width: 90%;
+  margin: auto;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.table th {
+  background: #002c54;
+  color: white;
+  padding: 15px;
+  font-size: 18px;
+}
+
+.table td {
+  padding: 14px;
+  text-align: center;
+  border-bottom: 1px solid #d9d9d9;
+  font-size: 16px;
+}
+
+.table tr:hover {
+  background-color: #eef7ff;
+}
+
+.approve-btn {
+  background:#009688;
+  padding: 7px 15px;
+  border: none;
+  color:white;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.approve-btn:hover {
+  background:#00796b;
+}
+.page-container {
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #0a2240;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 17px;
+}
+
+.table th {
+    background: #07223d;
+    color: white;
+    padding: 14px;
+    text-align: left;
+    font-weight: bold;
+}
+
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.table tr:hover {
+    background: #f2f6ff;
+    transition: 0.2s;
+}
