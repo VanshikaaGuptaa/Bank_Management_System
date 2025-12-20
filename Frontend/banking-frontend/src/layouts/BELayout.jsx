@@ -23,7 +23,7 @@ export default function BELayout({ active = "dashboard", children }) {
 
   const handleLogout = () => {
     logout();
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (

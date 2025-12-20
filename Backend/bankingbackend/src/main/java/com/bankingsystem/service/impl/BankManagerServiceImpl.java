@@ -405,17 +405,18 @@ final Integer branchIdFinal=branchId;
 }
 	
 	@Override
-	public List<TempBankEmployeeDto> getTempBankEmployeesForCurrentBM(Integer bmUserId) {
-	    if (bmUserId == null) return Collections.emptyList();
+	public List<TempBankEmployeeDto> getTempBankEmployeesForCurrentBM(Integer bmId) {
+	    if (bmId == null) return Collections.emptyList();
 
 	    try {
-	    	
+	    	final String sql1="SELECT user_id FROM bank_manager WHERE bm_id=?";
+			Integer userId = jdbcTemplate.queryForObject(sql1, Integer.class, bmId);
 	        // Step 1: Get branchId for this bank manager
 	        final String sql = "SELECT branch_id FROM bank_manager WHERE user_id = ?";
-	        Integer branchId = jdbcTemplate.queryForObject(sql, Integer.class, bmUserId);
+	        Integer branchId = jdbcTemplate.queryForObject(sql, Integer.class, userId);
 
 	        if (branchId == null) {
-	            System.out.println("No branch assigned to BM ID: " + bmUserId);
+	            System.out.println("No branch assigned to BM ID: " + bmId);
 	            return Collections.emptyList();
 	        }
 

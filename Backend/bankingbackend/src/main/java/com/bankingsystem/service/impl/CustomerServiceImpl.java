@@ -116,6 +116,31 @@ public class CustomerServiceImpl implements CustomerService {
         return true;
     }
     @Override
+public boolean deleteAccount(String accNo) {
+
+    int subAccRows =
+        jdbcTemplate.update(
+            "DELETE FROM subsequent_account WHERE account_no = ?",
+            accNo
+        );
+
+    int txnRows =
+        jdbcTemplate.update(
+            "DELETE FROM `transaction` WHERE acc_no = ?",
+            accNo
+        );
+
+    int accRows =
+        jdbcTemplate.update(
+            "DELETE FROM account WHERE acc_no = ?",
+            accNo
+        );
+
+    // If main account row not deleted → nothing happened
+    return accRows > 0;
+}
+
+    @Override
     public boolean changePasswordAndActivate(ChangePasswordDto dto) {
 
         String selectSql = "SELECT user_id, password, status FROM user WHERE username = ?";

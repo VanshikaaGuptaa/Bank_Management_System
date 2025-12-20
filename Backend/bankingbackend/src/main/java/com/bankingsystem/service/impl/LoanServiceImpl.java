@@ -107,19 +107,17 @@ public class LoanServiceImpl implements LoanService {
         String overallStatus = l.getStatus();
 
         if (remaining == 0) {
-            newStatus = "Completed";
-            overallStatus = "Closed";
+            overallStatus = "CLOSED";
         }
 
         String sql = "UPDATE loan SET remaining_amount=?, paid_emis=?, last_payment_date=?, " +
-                "next_payment_date=?, loan_status=?, status=? WHERE loan_id=?";
+                "next_payment_date=?, loan_status=? WHERE loan_id=?";
 
         jdbcTemplate.update(sql,
                 remaining,
                 paidEmis,
                 Date.valueOf(today),
                 (remaining == 0 ? null : Date.valueOf(next)),
-                newStatus,
                 overallStatus,
                 dto.getLoanId());
 
@@ -138,14 +136,14 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     public List<Loan> getByCustomer(Integer custId) {
-        String sql = "SELECT * FROM loan WHERE cust_id = ?";
+        String sql = "SELECT * FROM loan WHERE cust_id = ? IF loan_status='ACTIVE'";
         return jdbcTemplate.query(sql, this::mapLoan, custId);
     }
     @Override
     public List<CreateLoanDto> getLoanStatusReport() {
         String sql = "SELECT loan_id, cust_id, loan_type, amount, interest_rate, tenure_months, " +
                      "loan_status, total_emis, paid_emis, remaining_amount, " +
-                     "issue_date, next_payment_date, last_payment_date FROM loan";
+                     "issue_date, next_payment_date, last_payment_date FROM loan ";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             CreateLoanDto dto = new CreateLoanDto();

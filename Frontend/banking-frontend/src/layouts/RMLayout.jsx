@@ -25,7 +25,7 @@ export default function RMLayout({ activeKey, children }) {
     localStorage.removeItem("role");
     localStorage.removeItem("userId");
     localStorage.removeItem("fullName");
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   return (

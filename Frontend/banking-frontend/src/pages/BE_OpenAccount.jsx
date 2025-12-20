@@ -142,16 +142,7 @@ export default function OpenFirstAccount({ customerId }) {
             </select>
           </label>
 
-          <label className="block">
-            <span className="text-slate-300">Initial deposit</span>
-            <input
-              type="number"
-              step="0.01"
-              value={initialDeposit}
-              onChange={(e) => setInitialDeposit(e.target.value)}
-              className="mt-1 w-full rounded-xl bg-slate-900 border border-slate-700 px-3 py-2 text-slate-100 outline-none focus:ring-2 focus:ring-emerald-500/60"
-            />
-          </label>
+         
 
           <label className="block">
             <span className="text-slate-300">Customer ID</span>

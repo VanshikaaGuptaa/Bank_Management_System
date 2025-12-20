@@ -148,16 +148,7 @@ export default function Customer_Dashboard() {
                       >
                         Apply Loan
                       </button>
-                      <button
-                        onClick={() =>
-                          navigate(
-                            `/customer/account/${accNo}`
-                          )
-                        }
-                        className="px-3 py-1 rounded-xl bg-emerald-500 text-slate-50 text-xs font-semibold hover:bg-emerald-400"
-                      >
-                        View
-                      </button>
+                     
                     </td>
                   </tr>
                 );

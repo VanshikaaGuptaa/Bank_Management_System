@@ -5,6 +5,22 @@ import { useNavigate } from "react-router-dom";
 
 const API_BASE = "http://localhost:9191";
 
+// ===== Validation helpers =====
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^[6-9]\d{9}$/;
+
+const getPasswordStrength = (password) => {
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+
+  if (score <= 1) return "Weak";
+  if (score <= 3) return "Medium";
+  return "Strong";
+};
+
 export default function Register() {
   const navigate = useNavigate();
 
@@ -15,31 +31,59 @@ export default function Register() {
     fullName: "",
     email: "",
     phone: "",
-    role: "Customer", // default
+    role: "Customer",
     branchId: "",
-    accType: "Saving", // for customer
+    accType: "Saving",
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const passwordStrength = getPasswordStrength(form.password);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!emailRegex.test(form.email)) {
+      newErrors.email = "Invalid email format";
+    }
+
+    if (!phoneRegex.test(form.phone)) {
+      newErrors.phone = "Phone must be a valid 10-digit Indian number";
+    }
+
+    if (form.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    if (passwordStrength === "Weak") {
+      newErrors.password =
+        "Include uppercase, number & special character";
+    }
+
+    if (form.password !== form.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       setLoading(true);
       const branchIdNum = form.branchId ? Number(form.branchId) : null;
 
       if (form.role === "Customer") {
-        const payload = {
+        await axios.post(`${API_BASE}/api/customers/create`, {
           username: form.username,
           password: form.password,
           email: form.email,
@@ -49,12 +93,9 @@ export default function Register() {
           createdByBe: null,
           accType: form.accType,
           accStatus: "Pending",
-        };
-
-        await axios.post(`${API_BASE}/api/customers/create`, payload);
-        alert("Customer registered successfully");
+        });
       } else if (form.role === "BankManager") {
-        const payload = {
+        await axios.post(`${API_BASE}/api/bank-managers`, {
           username: form.username,
           password: form.password,
           role: "BankManager",
@@ -63,12 +104,9 @@ export default function Register() {
           email: form.email,
           status: "Pending",
           phone: form.phone,
-        };
-
-        await axios.post(`${API_BASE}/api/bank-managers`, payload);
-        alert("Bank Manager registered successfully");
-      } else if (form.role === "BankEmployee") {
-        const payload = {
+        });
+      } else {
+        await axios.post(`${API_BASE}/api/bank-employees`, {
           username: form.username,
           password: form.password,
           email: form.email,
@@ -78,215 +116,103 @@ export default function Register() {
           status: "Pending",
           approvedByBm: false,
           branchId: branchIdNum,
-        };
-
-        await axios.post(`${API_BASE}/api/bank-employees`, payload);
-        alert("Bank Employee registered successfully");
+        });
       }
 
+      alert("Registration successful");
       navigate("/login");
     } catch (err) {
       console.error(err);
-      alert("Registration failed. Check console for details.");
+      alert("Registration failed");
     } finally {
       setLoading(false);
     }
   };
 
   const inputClass =
-    "mt-1 w-full rounded-xl bg-slate-900/60 border border-slate-700 px-3 py-2 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400";
+    "mt-1 w-full rounded-xl bg-slate-900/60 border border-slate-700 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-400";
   const labelClass = "text-sm font-medium text-slate-200";
 
   return (
-    <div className="w-full bg-slate-900 text-slate-100 flex items-center justify-center px-4 py-8">
-      <div className="max-w-4xl w-full bg-slate-950/80 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
-        {/* Left panel / intro */}
-        <div className="hidden md:flex flex-col justify-between p-8 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900">
+    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
+      <div className="max-w-xl w-full bg-slate-950 border border-slate-800 rounded-3xl p-8 text-slate-100">
+        <h2 className="text-2xl font-bold mb-6">Register</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <p className="text-emerald-400 text-sm tracking-[0.25em] uppercase mb-2">
-              New here?
-            </p>
-            <h1 className="text-3xl font-extrabold leading-tight">
-              Create your <span className="text-emerald-400">Banking</span> account
-            </h1>
-            <p className="mt-4 text-slate-300 text-sm leading-relaxed">
-              Register as a customer, bank employee, or bank manager and get
-              access to secure dashboards, approvals, and account management in
-              just a few steps.
-            </p>
+            <label className={labelClass}>Username</label>
+            <input name="username" value={form.username} onChange={handleChange} required className={inputClass} />
           </div>
 
-          <div className="mt-8 space-y-3 text-sm">
-            <div className="flex items-center gap-3">
-              <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              <p className="text-slate-300">
-                Customer registrations create a pending account request for
-                branch approval.
+          <div>
+            <label className={labelClass}>Password</label>
+            <input type="password" name="password" value={form.password} onChange={handleChange} required className={inputClass} />
+            {form.password && (
+              <p className={`text-xs mt-1 ${
+                passwordStrength === "Strong" ? "text-emerald-400" :
+                passwordStrength === "Medium" ? "text-yellow-400" : "text-red-400"
+              }`}>
+                Strength: {passwordStrength}
               </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="h-2 w-2 rounded-full bg-sky-400" />
-              <p className="text-slate-300">
-                Employee & manager registrations require admin/branch approval.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Right panel / form */}
-        <div className="p-6 sm:p-8 bg-slate-950/60 backdrop-blur">
-          <h2 className="text-2xl font-bold mb-2">Register</h2>
-          <p className="text-sm text-slate-400 mb-6">
-            Fill in your details to create a new account.
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Username */}
-            <div>
-              <label className={labelClass}>Username</label>
-              <input
-                name="username"
-                value={form.username}
-                onChange={handleChange}
-                required
-                className={inputClass}
-                placeholder="john_doe"
-              />
-            </div>
-
-            {/* Passwords */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  required
-                  className={inputClass}
-                  placeholder="••••••••"
-                />
-              </div>
-              <div>
-                <label className={labelClass}>Confirm Password</label>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  className={inputClass}
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
-
-            {/* Full name */}
-            <div>
-              <label className={labelClass}>Full Name</label>
-              <input
-                name="fullName"
-                value={form.fullName}
-                onChange={handleChange}
-                required
-                className={inputClass}
-                placeholder="John Doe"
-              />
-            </div>
-
-            {/* Email & Phone */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                  className={inputClass}
-                  placeholder="you@example.com"
-                />
-              </div>
-              <div>
-                <label className={labelClass}>Phone</label>
-                <input
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  required
-                  className={inputClass}
-                  placeholder="9876543210"
-                />
-              </div>
-            </div>
-
-            {/* Role & Branch */}
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>Role</label>
-                <select
-                  name="role"
-                  value={form.role}
-                  onChange={handleChange}
-                  className={inputClass}
-                >
-                  <option value="Customer">Customer</option>
-                  <option value="BankEmployee">Bank Employee</option>
-                  <option value="BankManager">Bank Manager</option>
-                </select>
-              </div>
-              <div>
-                <label className={labelClass}>Branch ID</label>
-                <input
-                  name="branchId"
-                  value={form.branchId}
-                  onChange={handleChange}
-                  required
-                  className={inputClass}
-                  placeholder="e.g. 101"
-                />
-              </div>
-            </div>
-
-            {/* Account type only for Customer */}
-            {form.role === "Customer" && (
-              <div>
-                <label className={labelClass}>Account Type</label>
-                <select
-                  name="accType"
-                  value={form.accType}
-                  onChange={handleChange}
-                  className={inputClass}
-                >
-                  <option value="Saving">Saving</option>
-                  <option value="Current">Current</option>
-                </select>
-              </div>
             )}
+            {errors.password && <p className="text-xs text-red-400">{errors.password}</p>}
+          </div>
 
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="mt-4 w-full rounded-2xl bg-emerald-400 text-slate-900 font-semibold py-2.5 shadow-md hover:bg-emerald-500 active:bg-emerald-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {loading ? "Registering..." : "Register"}
-            </button>
+          <div>
+            <label className={labelClass}>Confirm Password</label>
+            <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} required className={inputClass} />
+            {errors.confirmPassword && <p className="text-xs text-red-400">{errors.confirmPassword}</p>}
+          </div>
 
-            <p className="mt-3 text-xs text-slate-400 text-center">
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={() => navigate("/login")}
-                className="text-emerald-400 hover:underline"
-              >
-                Log in
-              </button>
-            </p>
-          </form>
-        </div>
+          <div>
+            <label className={labelClass}>Full Name</label>
+            <input name="fullName" value={form.fullName} onChange={handleChange} required className={inputClass} />
+          </div>
+
+          <div>
+            <label className={labelClass}>Email</label>
+            <input name="email" value={form.email} onChange={handleChange} required className={inputClass} />
+            {errors.email && <p className="text-xs text-red-400">{errors.email}</p>}
+          </div>
+
+          <div>
+            <label className={labelClass}>Phone</label>
+            <input name="phone" value={form.phone} onChange={handleChange} required className={inputClass} />
+            {errors.phone && <p className="text-xs text-red-400">{errors.phone}</p>}
+          </div>
+
+          <div>
+            <label className={labelClass}>Role</label>
+            <select name="role" value={form.role} onChange={handleChange} className={inputClass}>
+              <option value="Customer">Customer</option>
+              <option value="BankEmployee">Bank Employee</option>
+              <option value="BankManager">Bank Manager</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={labelClass}>Branch ID</label>
+            <input name="branchId" value={form.branchId} onChange={handleChange} required className={inputClass} />
+          </div>
+
+          {form.role === "Customer" && (
+            <div>
+              <label className={labelClass}>Account Type</label>
+              <select name="accType" value={form.accType} onChange={handleChange} className={inputClass}>
+                <option value="Saving">Saving</option>
+                <option value="Current">Current</option>
+              </select>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-4 bg-emerald-400 text-slate-900 font-semibold py-2 rounded-xl disabled:opacity-60"
+          >
+            {loading ? "Registering..." : "Register"}
+          </button>
+        </form>
       </div>
     </div>
   );

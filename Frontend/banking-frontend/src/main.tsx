@@ -42,6 +42,9 @@ import RM_CustomerDemographicsReport from "./pages/RM_CustomerDemographicsReport
 import RM_BranchPerformanceReport from "./pages/RM_BranchPerformanceReport.jsx";
 import RM_LoanStatusReport from "./pages/RM_LoanStatusReport.jsx";
 import CustomerSubsequentAccounts from "./pages/CustomerSubsequentAccounts.jsx";
+import Close_Account from "./pages/Close_Account.jsx";
+import ApplyLoan from "./pages/ApplyLoan.jsx";
+import MyLoans from "./pages/MyLoans.jsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -79,7 +82,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 <Route path="/rm/reports/branch-performance" element={<RM_BranchPerformanceReport />} />
 <Route path="/rm/reports/loan-status" element={<RM_LoanStatusReport />} />
 <Route path="/customer/fd-rd" element={<CustomerSubsequentAccounts />} />
-
+<Route path="/customer/close-account" element={<Close_Account />} />
+<Route path="/customer/apply-loan" element={<ApplyLoan />} />
+<Route path="/customer/loans" element={<MyLoans />} />
       <Route
   path="/be-dashboard"
   element={
@@ -208,7 +213,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <Route path="/customer/change-password" element={<ChangePassword />} />
       
         {/* Fallback */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
  
        
       </Routes>

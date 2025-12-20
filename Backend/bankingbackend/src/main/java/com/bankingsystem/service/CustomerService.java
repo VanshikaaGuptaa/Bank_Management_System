@@ -15,10 +15,11 @@ public interface CustomerService {
 
 	List<Customer> getAllCustomers();
 
-	// change password + activate account
 	boolean changePasswordAndActivate(ChangePasswordDto dto);
 
 	List<Map<String, Object>> getCustomerDemographics();
 
 	boolean updateProfile(Integer custId, User user);
+
+	boolean  deleteAccount(String accNo);
 }
